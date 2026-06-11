@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ভোটার তালিকা — উথুরা ইউনিয়ন</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+:root{
+  --g:#1a6b3c;--gm:#2d8c55;--gl:#e8f5ee;
+  --bg:#f2f5f3;--card:#fff;--border:#cde0d5;
+  --text:#162516;--muted:#5a7565;
+  --shadow:0 2px 14px rgba(26,107,60,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hind Siliguri',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* Header */
+.header{background:linear-gradient(135deg,var(--g),var(--gm));color:#fff;box-shadow:0 3px 16px rgba(0,0,0,.18)}
+.header-inner{display:flex;align-items:center;gap:14px;padding:15px 28px}
+.flag-bar{width:5px;height:50px;border-radius:3px;background:linear-gradient(to bottom,#006a4e 50%,#f42a41 50%);flex-shrink:0}
+.h-title h1{font-size:1.4rem;font-weight:700}
+.h-title p{font-size:.83rem;opacity:.82;margin-top:2px}
+.h-badge{margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:5px 13px;font-size:.76rem;white-space:nowrap}
+
+.main{max-width:860px;margin:0 auto;padding:22px 16px}
+
+/* Loading */
+.loading{text-align:center;padding:48px;color:var(--muted)}
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--g);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Stats */
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:.8rem;color:var(--muted)}
+.chip strong{color:var(--g);font-weight:700}
+
+/* Search */
+.search-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;box-shadow:var(--shadow)}
+.search-box h3{font-size:.97rem;font-weight:600;margin-bottom:13px;color:var(--text)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:540px){.sg{grid-template-columns:1fr}}
+.ig{display:flex;flex-direction:column;gap:4px}
+.ig label{font-size:.76rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ig input{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:.93rem;color:var(--text);background:#fafcfb;transition:border-color .2s;width:100%}
+.ig input:focus{outline:none;border-color:var(--g);background:#fff}
+.ig input::placeholder{color:#bbb}
+.sa{display:flex;gap:9px;margin-top:13px}
+.btn-s{flex:1;background:var(--g);color:#fff;border:none;padding:11px 18px;border-radius:9px;font-family:inherit;font-size:.97rem;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-s:hover{background:var(--gm)}
+.btn-c{background:#fff;color:var(--muted);border:1.5px solid var(--border);padding:11px 16px;border-radius:9px;font-family:inherit;font-size:.88rem;cursor:pointer;transition:.2s}
+.btn-c:hover{border-color:#c0392b;color:#c0392b}
+
+/* Results */
+.res-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.res-cnt{font-size:.88rem;color:var(--muted)}
+.res-cnt strong{color:var(--g)}
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:11px;overflow:hidden;transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 20px rgba(26,107,60,.15)}
+.card-hdr{background:linear-gradient(135deg,var(--g),var(--gm));color:#fff;padding:12px 17px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.vname{font-size:1.07rem;font-weight:700}
+.gbadge{background:rgba(255,255,255,.15);border-radius:20px;padding:2px 10px;font-size:.76rem;margin-left:7px}
+.nid-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:3px 11px;font-size:.79rem;font-family:monospace;letter-spacing:.02em}
+.card-body{padding:14px 17px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:460px){.fields{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:2px}
+.fl{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fv{font-size:.9rem;color:var(--text)}
+.fdiv{grid-column:1/-1;border:none;border-top:1px dashed var(--border);margin:3px 0}
+.area-tag{background:var(--gl);border-radius:8px;padding:7px 12px;font-size:.79rem;color:var(--g);margin-top:9px}
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty .ei{font-size:2.6rem;margin-bottom:10px}
+.more-note{text-align:center;padding:14px;color:var(--muted);font-size:.85rem}
+mark{background:#fff176;color:var(--text);border-radius:2px;padding:0 2px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <div class="flag-bar"></div>
+    <div class="h-title">
+      <h1>ভোটার তালিকা অনুসন্ধান</h1>
+      <p>উথুরা ইউনিয়ন, ভালুকা, ময়মনিসংহ</p>
+    </div>
+    <div class="h-badge">বাংলাদেশ নির্বাচন কমিশন</div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="stats" id="stats"></div>
+
+    <div class="search-box">
+      <h3>🔍 ভোটার অনুসন্ধান</h3>
+      <div class="sg">
+        <div class="ig">
+          <label>ভোটার নং (NID)</label>
+          <input type="text" id="qnid" placeholder="ভোটার নম্বর লিখুন..." oninput="autoSearch()">
+        </div>
+        <div class="ig">
+          <label>নাম</label>
+          <input type="text" id="qname" placeholder="নাম লিখুন..." oninput="autoSearch()">
+        </div>
+        <div class="ig">
+          <label>পিতার নাম</label>
+          <input type="text" id="qfather" placeholder="পিতার নাম..." oninput="autoSearch()">
+        </div>
+        <div class="ig">
+          <label>মাতার নাম</label>
+          <input type="text" id="qmother" placeholder="মাতার নাম..." oninput="autoSearch()">
+        </div>
+      </div>
+      <div class="sa">
+        <button class="btn-s" onclick="doSearch()">🔍 অনুসন্ধান করুন</button>
+        <button class="btn-c" onclick="clearAll()">✕ মুছুন</button>
+      </div>
+    </div>
+
+    <div id="results"></div>
+  </div>
+</div>
+
+<script>
+let voters = [];
+
+// Load voters.json
+fetch('voters.json')
+  .then(r => r.json())
+  .then(data => {
+    voters = data;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+    const male = voters.filter(v => v.gender === 'পুরুষ').length;
+    const female = voters.filter(v => v.gender === 'মহিলা').length;
+    const areas = new Set(voters.map(v => v.area_code)).size;
+    document.getElementById('stats').innerHTML = `
+      <div class="chip">📋 মোট ভোটার: <strong>${voters.length.toLocaleString('bn-BD')}</strong></div>
+      <div class="chip">👨 পুরুষ: <strong>${male.toLocaleString('bn-BD')}</strong></div>
+      <div class="chip">👩 মহিলা: <strong>${female.toLocaleString('bn-BD')}</strong></div>
+      <div class="chip">🗂️ এলাকা: <strong>${areas}</strong></div>
+    `;
+  })
+  .catch(e => {
+    document.getElementById('loading').innerHTML = '<p style="color:#c0392b">voters.json লোড করতে সমস্যা হয়েছে।</p>';
+  });
+
+let timer = null;
+function autoSearch() {
+  clearTimeout(timer);
+  const nid = v('qnid');
+  if (nid.length >= 10) { doSearch(); return; }
+  const hasInput = ['qnid','qname','qfather','qmother'].some(id => v(id).length >= 2);
+  if (hasInput) timer = setTimeout(doSearch, 400);
+}
+
+function doSearch() {
+  const nid = v('qnid'), name = v('qname'), father = v('qfather'), mother = v('qmother');
+  if (!nid && !name && !father && !mother) { document.getElementById('results').innerHTML = ''; return; }
+
+  const res = voters.filter(voter => {
+    if (nid && !n(voter.nid).includes(n(nid))) return false;
+    if (name && !n(voter.name).includes(n(name))) return false;
+    if (father && !n(voter.father).includes(n(father))) return false;
+    if (mother && !n(voter.mother).includes(n(mother))) return false;
+    return true;
+  });
+
+  render(res, { nid, name, father, mother });
+}
+
+function clearAll() {
+  ['qnid','qname','qfather','qmother'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('results').innerHTML = '';
+}
+
+function v(id) { return document.getElementById(id).value.trim(); }
+function n(s) { return (s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
+function hl(text, q) {
+  if (!text || !q) return text || '—';
+  try { return text.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`); }
+  catch { return text; }
+}
+
+function render(res, q) {
+  const el = document.getElementById('results');
+  if (!res.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">🔍</div><p>কোনো ভোটার পাওয়া যায়নি।<br>অন্য শব্দ দিয়ে চেষ্টা করুন।</p></div>';
+    return;
+  }
+  const show = res.slice(0, 100);
+  let html = `<div class="res-hdr"><div class="res-cnt"><strong>${res.length}</strong> জন ভোটার পাওয়া গেছে</div></div>`;
+  html += show.map(voter => `
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <span class="vname">${hl(voter.name, q.name)}</span>
+          <span class="gbadge">${voter.gender === 'মহিলা' ? '👩 মহিলা' : '👨 পুরুষ'}</span>
+        </div>
+        <div class="nid-badge">${hl(voter.nid, q.nid)}</div>
+      </div>
+      <div class="card-body">
+        <div class="fields">
+          <div class="f"><div class="fl">পিতার নাম</div><div class="fv">${hl(voter.father, q.father) || '—'}</div></div>
+          <div class="f"><div class="fl">মাতার নাম</div><div class="fv">${hl(voter.mother, q.mother) || '—'}</div></div>
+          <hr class="fdiv">
+          <div class="f"><div class="fl">জন্ম তারিখ</div><div class="fv">${voter.dob || '—'}</div></div>
+          <div class="f"><div class="fl">পেশা</div><div class="fv">${voter.occupation || '—'}</div></div>
+          ${voter.address ? `<div class="f" style="grid-column:1/-1"><div class="fl">ঠিকানা</div><div class="fv">${voter.address}</div></div>` : ''}
+        </div>
+        ${voter.area_name ? `<div class="area-tag">📍 ${voter.area_name}${voter.area_code ? ' · কোড: ' + voter.area_code : ''}</div>` : ''}
+      </div>
+    </div>`).join('');
+  if (res.length > 100) html += `<div class="more-note">প্রথম ১০০টি দেখানো হচ্ছে — আরও নির্দিষ্ট করে অনুসন্ধান করুন।</div>`;
+  el.innerHTML = html;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>
